@@ -4,10 +4,8 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.spark.SparkConf;
 import org.apache.spark.api.java.JavaPairRDD;
 import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
@@ -26,19 +24,15 @@ public class Main {
 
 	public static void main(final String[] args) {
 
-		// Set logging level to skip WARN messages
+		// Set logging level to WARN messages
 		Logger.getLogger("org.apache").setLevel(Level.WARN);
 
 		// Set Hadoop directory
 		System.setProperty("hadoop.home.dir", "c:/hadoop");
 
-		// Configuration for Spark context
-		final SparkConf conf = new SparkConf().setAppName("startingSpark").setMaster("local[*]");
-		final JavaSparkContext sc = new JavaSparkContext(conf);
-
 		// Load the data from database
 		final SparkSession spark = SparkSession.builder().appName("Spark calculation of average days subscribed")
-				.getOrCreate();
+				.master("local[*]").getOrCreate();
 
 		// Query database for the desired data, note the connection details
 		final Dataset<Row> load = spark.read().format("jdbc")
